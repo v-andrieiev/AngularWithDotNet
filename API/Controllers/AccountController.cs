@@ -3,13 +3,14 @@ using System.Text;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    public class AccountController(DataContext context, ITokenService tokenService) : BaseApiController
+    public class AccountController(IUserRepository userRepository, ITokenService tokenService) : BaseApiController
     {
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
@@ -41,7 +42,7 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
 
-            var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == loginDto.Username.ToLower());
+            var user = await userRepository.GetUserByUsernameAsync(loginDto.Username);
 
             if (user == null) return Unauthorized("Invalid username or password");
 
@@ -56,13 +57,15 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };;
         }
 
         private async Task<bool> UserExists(string username)
         {
-            return await context.Users.AnyAsync(x => x.UserName.ToLower() == username.ToLower());
+            
+            return await userRepository.GetUserByUsernameAsync(username) != null;;
         }
     }
 }
