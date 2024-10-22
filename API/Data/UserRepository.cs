@@ -13,6 +13,12 @@ namespace API.Data
 {
     public class UserRepository(DataContext context, IMapper mapper) : IUserRepository
     {
+        public async void Create(AppUser user)
+        {
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+        }
+
         public async Task<MemberDto?> GetMemberAsync(string username)
         {
             return await context.Users
