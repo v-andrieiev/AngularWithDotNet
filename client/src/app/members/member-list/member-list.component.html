@@ -71,7 +71,8 @@
   <div class="col-2">
     <app-member-card [member]="member"></app-member-card>
   </div>
-  } @if(memberService.paginatedResult()?.pagenation){
+  } 
+  @if(memberService.paginatedResult()?.pagenation){
   <div class="d-flex justify-content-center">
     <pagination
       [boundaryLinks]="true"
