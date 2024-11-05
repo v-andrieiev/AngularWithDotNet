@@ -19,7 +19,7 @@ namespace API.Extensions
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddDbContext<DataContext>(opt =>
             {
-                opt.UseSqlite(config.GetConnectionString("DefaultConnectionString"));
+                opt.UseSqlServer(config.GetConnectionString("DefaultConnectionString"));
             });
 
             services.AddCors();

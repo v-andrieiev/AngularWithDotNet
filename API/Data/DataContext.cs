@@ -42,7 +42,7 @@ public class DataContext(DbContextOptions options) : IdentityDbContext<AppUser, 
             .HasOne(s => s.TargetUser) // Вказуємо, що UserLike має одне посилання на TargetUser.
             .WithMany(l => l.LikedByUsers) // Вказуємо, що TargetUser може мати багато LikedByUsers.
             .HasForeignKey(s => s.TargetUserId) // Налаштовуємо зовнішній ключ для TargetUserId.
-            .OnDelete(DeleteBehavior.Cascade); // Видаляємо UserLike-ів, коли видаляється TargetUser.
+            .OnDelete(DeleteBehavior.NoAction); // Видаляємо UserLike-ів, коли видаляється TargetUser.
 
         builder.Entity<Message>()
             .HasOne(x => x.Recipient)
